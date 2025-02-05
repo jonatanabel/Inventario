@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Plantas</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { width: 80%; margin: auto; }
+        input, select { margin: 10px; padding: 5px; }
+        .plant-list { display: flex; flex-wrap: wrap; justify-content: center; }
+        .plant-card { border: 1px solid #ddd; padding: 10px; margin: 10px; width: 200px; }
+        img { width: 100%; height: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Inventario de Plantas</h1>
+        <input type="text" id="search" placeholder="Buscar por nombre...">
+        <select id="filter">
+            <option value="all">Todos</option>
+            <option value="interior">Interior</option>
+            <option value="exterior">Exterior</option>
+        </select>
+        <div class="plant-list" id="plantList"></div>
+    </div>
+    <script>
+        const plants = [
+            { name: "Aloe Vera", price: 500, stock: 20, image: "https://via.placeholder.com/150", type: "exterior" },
+            { name: "Ficus", price: 350, stock: 10, image: "https://via.placeholder.com/150", type: "interior" },
+            { name: "Cactus", price: 250, stock: 15, image: "https://via.placeholder.com/150", type: "exterior" }
+        ];
+
+        function displayPlants(filter = "all", search = "") {
+            const plantList = document.getElementById("plantList");
+            plantList.innerHTML = "";
+            
+            const filteredPlants = plants.filter(p => 
+                (filter === "all" || p.type === filter) && 
+                p.name.toLowerCase().includes(search.toLowerCase())
+            );
+            
+            filteredPlants.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "plant-card";
+                card.innerHTML = `
+                    <img src="${p.image}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p>Precio: $${p.price}</p>
+                    <p>Stock: ${p.stock}</p>
+                    <p>Tipo: ${p.type}</p>
+                `;
+                plantList.appendChild(card);
+            });
+        }
+
+        document.getElementById("search").addEventListener("input", (e) => {
+            displayPlants(document.getElementById("filter").value, e.target.value);
+        });
+
+        document.getElementById("filter").addEventListener("change", (e) => {
+            displayPlants(e.target.value, document.getElementById("search").value);
+        });
+
+        displayPlants();
+    </script>
+</body>
+</html>
